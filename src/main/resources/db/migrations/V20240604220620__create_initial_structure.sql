@@ -24,5 +24,10 @@ CREATE TABLE IF NOT EXISTS payment
     CONSTRAINT pk_payment PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS payment
-    ADD CONSTRAINT FK_PAYMENT_ON_DEBT FOREIGN KEY (debt_id) REFERENCES debt (id);
+DO $$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_payment_on_debt') THEN
+            ALTER TABLE payment
+                ADD CONSTRAINT FK_PAYMENT_ON_DEBT FOREIGN KEY (debt_id) REFERENCES debt (id);
+        END IF;
+END $$;
