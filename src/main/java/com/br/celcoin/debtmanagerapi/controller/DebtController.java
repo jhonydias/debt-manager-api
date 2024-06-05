@@ -1,8 +1,11 @@
 package com.br.celcoin.debtmanagerapi.controller;
 
 
+import com.br.celcoin.debtmanagerapi.model.dto.request.DebtRequestDto;
+import com.br.celcoin.debtmanagerapi.model.dto.response.DebtResponseDto;
 import com.br.celcoin.debtmanagerapi.model.entity.Debt;
 import com.br.celcoin.debtmanagerapi.service.DebtService;
+import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +25,7 @@ public class DebtController {
     }
 
     @PostMapping
-    public ResponseEntity<Debt> createDebt(@RequestBody Debt debt) {
+    public ResponseEntity<DebtResponseDto> createDebt(@Valid @RequestBody DebtRequestDto debt) {
         return ResponseEntity.ok(debtService.createDebt(debt));
     }
 
