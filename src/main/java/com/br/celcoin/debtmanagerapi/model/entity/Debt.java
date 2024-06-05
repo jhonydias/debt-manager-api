@@ -2,10 +2,7 @@ package com.br.celcoin.debtmanagerapi.model.entity;
 
 import com.br.celcoin.debtmanagerapi.model.enums.DebtStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Debt extends BaseEntity {
 
     @Id
@@ -35,10 +33,30 @@ public class Debt extends BaseEntity {
     @OneToMany(mappedBy = "debt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments = new ArrayList<>();
 
+    public BigDecimal calculateInterest() {
+        if (this.principalAmount != null && this.interestRate != null && this.numberOfInstallments != null) {
+            BigDecimal onePlusRate = BigDecimal.ONE.add(this.interestRate);
+            BigDecimal compoundFactor = onePlusRate.pow(this.numberOfInstallments);
+            return this.principalAmount.multiply(compoundFactor);
+        }
+        return BigDecimal.ZERO;
+    }
+
     public BigDecimal getRemainingAmount() {
         BigDecimal paidAmount = payments.stream()
                 .map(Payment::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return totalAmount.subtract(paidAmount);
+    }
+
+    public boolean isOverdue() {
+        LocalDate today = LocalDate.now();
+        return today.isAfter(dueDate) && getRemainingAmount().compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.status = DebtStatus.PENDING;
+        this.totalAmount = calculateInterest();
     }
 }
