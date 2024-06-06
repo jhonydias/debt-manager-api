@@ -42,8 +42,24 @@ class DebtServiceImplIntegrationTest {
                 .creditorName("Creditor")
                 .dueDate(LocalDate.now().plusMonths(1))
                 .build();
-        debt.prePersist();
         debt = debtRepository.save(debt);
+    }
+
+    @Test
+    void testSearchDebts_Success() {
+        DebtSeachRequestDto searchRequestDto = new DebtSeachRequestDto(
+                "Creditor",
+                DebtStatus.PENDING,
+                null,
+                null,
+                null);
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<DebtSeachResponseDto> response = debtService.searchDebts(searchRequestDto, pageable);
+
+        assertNotNull(response);
+        assertEquals(1, response.getTotalElements());
+        assertEquals(debt.getId(), response.getContent().get(0).id());
     }
 
     @Test
@@ -67,23 +83,6 @@ class DebtServiceImplIntegrationTest {
         Debt createdDebt = debtRepository.findById(response.id()).orElse(null);
         assertNotNull(createdDebt);
         assertEquals(createdDebt.calculateCompoundInterest(), createdDebt.getTotalAmount());
-    }
-
-    @Test
-    void testSearchDebts_Success() {
-        DebtSeachRequestDto searchRequestDto = new DebtSeachRequestDto(
-                "Creditor",
-                DebtStatus.PENDING,
-                null,
-                null,
-                null);
-
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<DebtSeachResponseDto> response = debtService.searchDebts(searchRequestDto, pageable);
-
-        assertNotNull(response);
-        assertEquals(1, response.getTotalElements());
-        assertEquals(debt.getId(), response.getContent().get(0).id());
     }
 
     @Test

@@ -66,7 +66,7 @@ public class Debt extends BaseEntity {
         BigDecimal paidAmount = payments != null ? payments.stream()
                 .map(Payment::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
-        return totalAmount.subtract(paidAmount);
+        return totalAmount != null ? totalAmount.subtract(paidAmount) : BigDecimal.ZERO;
     }
 
     public boolean isOverdue() {
