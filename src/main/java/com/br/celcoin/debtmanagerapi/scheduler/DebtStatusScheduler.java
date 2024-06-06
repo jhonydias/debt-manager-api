@@ -1,13 +1,16 @@
-package com.br.celcoin.debtmanagerapi.service.scheduler;
+package com.br.celcoin.debtmanagerapi.scheduler;
 
 import com.br.celcoin.debtmanagerapi.model.entity.Debt;
 import com.br.celcoin.debtmanagerapi.model.enums.DebtStatus;
 import com.br.celcoin.debtmanagerapi.repository.DebtRepository;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class DebtStatusScheduler {
@@ -21,20 +24,23 @@ public class DebtStatusScheduler {
         this.debtRepository = debtRepository;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")  // Executa todos os dias à meia-noite
+    @Scheduled(cron = "${scheduler.cron}")
+    @SchedulerLock(name = "DebtStatusScheduler_checkAndUpdateAllDebtStatus", lockAtMostFor = "PT30M", lockAtLeastFor = "PT1M")
     public void checkAndUpdateAllDebtStatus() {
         int pageNumber = 0;
-        Page<Debt> debtPage;
+        Page<Long> debtIdPage;
 
         do {
-            debtPage = debtRepository.findAll(PageRequest.of(pageNumber, PAGE_SIZE));
-            for (Debt debt : debtPage.getContent()) {
+            debtIdPage = debtRepository.findIdsByStatus(DebtStatus.PENDING, PageRequest.of(pageNumber, PAGE_SIZE));
+            List<Debt> debts = debtRepository.findByIdIn(debtIdPage.getContent());
+
+            for (Debt debt : debts) {
                 if (debt.isOverdue() && debt.getStatus() != DebtStatus.OVERDUE) {
                     debt.setStatus(DebtStatus.OVERDUE);
                     debtRepository.save(debt);
                 }
             }
             pageNumber++;
-        } while (debtPage.hasNext());
+        } while (debtIdPage.hasNext());
     }
 }
