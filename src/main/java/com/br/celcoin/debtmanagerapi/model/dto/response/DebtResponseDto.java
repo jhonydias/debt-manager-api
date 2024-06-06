@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 public record DebtResponseDto(LocalDateTime dateCreate, Long id, BigDecimal totalAmount, BigDecimal principalAmount,
                               String creditorName, LocalDate dueDate, Integer numberOfInstallments,
                               BigDecimal interestRate,
-                              DebtStatus status) implements Serializable {
+                              DebtStatus status,
+                              BigDecimal remainingAmount) implements Serializable {
     public static DebtResponseDto fromEntity(Debt save) {
         return new DebtResponseDto(
                 save.getDateCreate(),
@@ -25,7 +26,8 @@ public record DebtResponseDto(LocalDateTime dateCreate, Long id, BigDecimal tota
                 save.getDueDate(),
                 save.getNumberOfInstallments(),
                 save.getInterestRate(),
-                save.getStatus()
+                save.getStatus(),
+                save.getRemainingAmount()
         );
     }
 }
