@@ -29,8 +29,8 @@ Debt Manager API é um projeto Spring Boot para gerenciar dívidas, incluindo fu
 
 Clone o repositório em sua máquina local usando:
 ```bash
-git clone https://github.com/dbasuporte/exame-gateway-api.git
-cd exame-gateway-api
+git clone https://github.com/jhonydias/debt-manager-api.git
+cd debt-manager-api
 ````
 ## Executando o Projeto
 Siga os passos abaixo para construir e executar o projeto:
@@ -43,6 +43,15 @@ Siga os passos abaixo para construir e executar o projeto:
 ### Construa o projeto com Docker Compose:
 ```sh
 docker-compose up --build
+```
+### Construa o projeto com [build_and_clean.sh](build_and_clean.sh):
+- Permissão de Execução para o Script
+```sh
+chmod +x run_and_clean.sh
+```
+- Executar o Script
+```sh
+./run_and_clean.sh
 ```
 ### Uso
 Após iniciar o serviço, ele estará disponível para receber requisições HTTP.
