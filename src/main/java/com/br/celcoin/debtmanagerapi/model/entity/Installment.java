@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Payment extends BaseEntity {
+public class Installment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,13 @@ public class Payment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "debt_id", nullable = false)
     private Debt debt;
+
     private BigDecimal amount;
-    private LocalDate paymentDate;
+    private LocalDate dueDate;
+    private boolean paid;
+
+    public boolean isOverdue() {
+        return !paid && LocalDate.now().isAfter(dueDate);
+    }
+
 }

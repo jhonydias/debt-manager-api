@@ -7,6 +7,12 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
+/**
+ * @author Jhony Dias
+ * See more {@link net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock}
+ * See the implementation {<a href="https://www.baeldung.com/shedlock-spring">...</a>}
+ */
+
 @Configuration
 public class SchedulerConfiguration {
     @Bean

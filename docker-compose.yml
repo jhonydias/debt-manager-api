@@ -10,17 +10,42 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - debt-network
+
+  test:
+    build:
+      context: .
+      target: build
+    depends_on:
+      - postgres
+    networks:
+      - debt-network
+    environment:
+      SERVER_PORT: 8082
+      ACTIVE_PROFILE: test
+    entrypoint: [ "./mvnw", "test" ]
 
   app:
     build: .
     ports:
-      - "8081:8080"
+      - "8081:8081"
     depends_on:
       - postgres
+      - test
     environment:
+      SERVER_PORT: 8081
+      ACTIVE_PROFILE: homolog
       DATASOURCE_URL: jdbc:postgresql://postgres:5432/debtmanager
       DATASOURCE_USERNAME: postgres
       DATASOURCE_PASSWORD: postgres
+      SHOW_SQL: "true"
+    networks:
+      - debt-network
 
 volumes:
   postgres_data:
+
+networks:
+  debt-network:
+    driver: bridge
