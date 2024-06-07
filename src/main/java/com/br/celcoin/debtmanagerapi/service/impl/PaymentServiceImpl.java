@@ -12,6 +12,7 @@ import com.br.celcoin.debtmanagerapi.repository.InstallmentRepository;
 import com.br.celcoin.debtmanagerapi.repository.PaymentRepository;
 import com.br.celcoin.debtmanagerapi.service.PaymentService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @return {@link PaymentResponseDto} The payment response DTO after processing the payment.
      */
     @Override
+    @Transactional
     public PaymentResponseDto registerPayment(PaymentRequestDto dto) {
         final Debt debt = findById(dto.idDebt());
 

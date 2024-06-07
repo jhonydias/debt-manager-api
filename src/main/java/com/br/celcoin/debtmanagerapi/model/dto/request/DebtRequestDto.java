@@ -28,10 +28,10 @@ public record DebtRequestDto(
         @Schema(description = "Name of the creditor", example = "Creditor Name")
         String creditorName,
 
-        @NotNull(message = "Due date is mandatory")
-        @Future(message = "Due date must be in the future")
-        @Schema(description = "Due date of the debt", example = "2024-12-31")
-        LocalDate dueDate,
+//        @NotNull(message = "Due date is mandatory")
+//        @Future(message = "Due date must be in the future")
+//        @Schema(description = "Due date of the debt", example = "2024-12-31")
+//        LocalDate dueDate,
 
         @NotNull(message = "Number of installments is mandatory")
         @Min(value = 1, message = "Number of installments must be at least 1")
@@ -43,7 +43,7 @@ public record DebtRequestDto(
         return Debt.builder()
                 .principalAmount(principalAmount)
                 .creditorName(creditorName)
-                .dueDate(dueDate)
+                .dueDate(LocalDate.now().plusMonths(1))
                 .numberOfInstallments(numberOfInstallments)
                 .interestRate(interestRate)
                 .build();

@@ -9,6 +9,7 @@ import com.br.celcoin.debtmanagerapi.repository.DebtRepository;
 import com.br.celcoin.debtmanagerapi.repository.specification.DebtSpecification;
 import com.br.celcoin.debtmanagerapi.service.DebtService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +27,9 @@ public class DebtServiceImpl implements DebtService {
         this.debtRepository = debtRepository;
     }
 
-    @Override public DebtResponseDto createDebt(DebtRequestDto dto) {
+    @Override
+    @Transactional
+    public DebtResponseDto createDebt(DebtRequestDto dto) {
         final Debt debt = dto.toEntity();
         return DebtResponseDto.fromEntity(debtRepository.save(debt));
     }

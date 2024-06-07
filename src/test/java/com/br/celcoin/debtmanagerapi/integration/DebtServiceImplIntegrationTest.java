@@ -1,4 +1,4 @@
-package com.br.celcoin.debtmanagerapi.service.impl;
+package com.br.celcoin.debtmanagerapi.integration;
 
 import com.br.celcoin.debtmanagerapi.model.dto.request.DebtRequestDto;
 import com.br.celcoin.debtmanagerapi.model.dto.request.DebtSeachRequestDto;
@@ -7,13 +7,16 @@ import com.br.celcoin.debtmanagerapi.model.dto.response.DebtSeachResponseDto;
 import com.br.celcoin.debtmanagerapi.model.entity.Debt;
 import com.br.celcoin.debtmanagerapi.model.enums.DebtStatus;
 import com.br.celcoin.debtmanagerapi.repository.DebtRepository;
+import com.br.celcoin.debtmanagerapi.service.impl.DebtServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -21,8 +24,10 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@AutoConfigureTestDatabase
+@ActiveProfiles("test")
 class DebtServiceImplIntegrationTest {
 
     @Autowired
@@ -68,7 +73,6 @@ class DebtServiceImplIntegrationTest {
                 new BigDecimal("1000.00"),
                 new BigDecimal("0.05"),
                 "Creditor Name",
-                LocalDate.now().plusMonths(6),
                 6
         );
 
@@ -78,7 +82,7 @@ class DebtServiceImplIntegrationTest {
         assertNotNull(response.id());
         assertEquals(debtRequestDto.principalAmount(), response.principalAmount());
         assertEquals(debtRequestDto.creditorName(), response.creditorName());
-        assertEquals(debtRequestDto.dueDate(), response.dueDate());
+        assertEquals(LocalDate.now().plusMonths(1), response.dueDate());
 
         Debt createdDebt = debtRepository.findById(response.id()).orElse(null);
         assertNotNull(createdDebt);

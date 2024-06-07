@@ -47,11 +47,11 @@ docker-compose up --build
 ### Construa o projeto com [build_and_clean.sh](build_and_clean.sh):
 - Permissão de Execução para o Script
 ```sh
-chmod +x run_and_clean.sh
+chmod +x build_and_clean.sh
 ```
 - Executar o Script
 ```sh
-./run_and_clean.sh
+./build_and_clean.sh
 ```
 ### Uso
 Após iniciar o serviço, ele estará disponível para receber requisições HTTP.

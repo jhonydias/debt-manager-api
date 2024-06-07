@@ -1,4 +1,4 @@
-package com.br.celcoin.debtmanagerapi.service.impl;
+package com.br.celcoin.debtmanagerapi.integration;
 
 import com.br.celcoin.debtmanagerapi.model.dto.request.PaymentRequestDto;
 import com.br.celcoin.debtmanagerapi.model.dto.response.InstallmentResponseDto;
@@ -7,10 +7,13 @@ import com.br.celcoin.debtmanagerapi.model.entity.Debt;
 import com.br.celcoin.debtmanagerapi.model.entity.Installment;
 import com.br.celcoin.debtmanagerapi.repository.DebtRepository;
 import com.br.celcoin.debtmanagerapi.repository.InstallmentRepository;
+import com.br.celcoin.debtmanagerapi.service.impl.PaymentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -21,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@AutoConfigureTestDatabase
+@ActiveProfiles("test")
 class PaymentServiceImplIntegrationTest {
 
     @Autowired
