@@ -48,7 +48,6 @@ class DebtServiceImplTest {
                 new BigDecimal("1000.00"),
                 new BigDecimal("0.05"),
                 "Creditor Name",
-                LocalDate.now().plusMonths(6),
                 6
         );
 
